@@ -1,15 +1,8 @@
-export const debounce = (callback, wait, immediate = false) => {
-  let timeout = null
-
-  return function() {
-    const callNow = immediate && !timeout
-    const next = () => callback.apply(this, arguments)
-
-    clearTimeout(timeout)
-    timeout = setTimeout(next, wait)
-
-    if (callNow) {
-      next()
-    }
-  }
+export function debounce(callback, wait) {
+  let timeout;
+  return (...args) => {
+    const context = this;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => callback.apply(context, args), wait);
+  };
 }
