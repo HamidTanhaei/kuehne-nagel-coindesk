@@ -44,7 +44,7 @@ export default class CurrencyPrice extends React.Component {
     return Object.keys(this.supportedCurrencies)
       .filter(item => {
         return (upperCaseText !== '' && this.supportedCurrencies[item].currency.indexOf(upperCaseText) === 0);
-      }).map(item => supportedCurrencies[item]);
+      }).map(item => this.supportedCurrencies[item]);
   };
 
   onType = (text) => {
