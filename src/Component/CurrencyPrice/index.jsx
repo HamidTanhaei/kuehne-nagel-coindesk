@@ -9,9 +9,9 @@ import supportedCurrencies from './supportedCurrencies';
 import InputDebounce from '../InputDebounce';
 import CurrencyCodeList from '../CurrencyCodeList';
 import CurrencyHistoryList from '../CurrencyHistoryList';
-
 import LoadingSpinner from '../LoadingSpinner';
-// assets
+
+// styles
 import '../InputDebounce/style.scss';
 import '../CurrencyCodeList/style.scss';
 import '../CurrencyHistoryList/style.scss';
@@ -28,14 +28,14 @@ export default class CurrencyPrice extends React.Component {
   };
   currencyCodeFinder = (code) => {
     const upperCaseText = code.toUpperCase();
-    // filter to find match codes
+    // filter to find match currency codes
     return Object.keys(supportedCurrencies)
       .filter(item => {
         return (upperCaseText !== '' && supportedCurrencies[item].currency.indexOf(upperCaseText) === 0);
       }).map(item => supportedCurrencies[item]);
   };
 
-  onType = async (text) => {
+  onType = (text) => {
     const currencyCodeNames = this.currencyCodeFinder(text);
     this.setState({foundCurrencies: currencyCodeNames, selectedCurrencyRate: ''});
   };
@@ -46,12 +46,14 @@ export default class CurrencyPrice extends React.Component {
       const data = await currentPriceCodeApi(code);
       this.setState({selectedCurrencyRate: data.data.bpi[code], rateLoading: false});
     } catch (e) {
+      console.log('currentprice code api error:', e);
       this.setState({rateLoading: false});
     }
     try{
       const historicalData = await historicalApi(code);
       this.setState({rateHistory: historicalData.data.bpi, rateHistoryLoading: false});
     } catch(e) {
+      console.log('historical api error:', e)
       this.setState({rateHistoryLoading: false});
     }
   };
