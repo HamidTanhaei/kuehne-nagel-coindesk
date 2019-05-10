@@ -1,6 +1,13 @@
 import axios from 'axios';
 import {routes} from './routes';
 
+export const supportedCurrenciesApi = () => {
+  return axios({
+    method: 'get',
+    url: routes.supportedCurrencies,
+  });
+};
+
 export const historicalApi = (code) => {
   return axios({
     method: 'get',

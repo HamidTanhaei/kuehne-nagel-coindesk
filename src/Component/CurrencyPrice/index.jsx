@@ -1,9 +1,8 @@
 import React from 'react';
 
 
-// data
-import {currentPriceCodeApi, historicalApi} from '../../services/coindeskApi';
-import supportedCurrencies from './supportedCurrencies';
+// api
+import {supportedCurrenciesApi, currentPriceCodeApi, historicalApi} from '../../services/coindeskApi';
 
 // components
 import InputDebounce from '../InputDebounce';
@@ -19,6 +18,7 @@ import '../CurrencyHistoryList/style.scss';
 import './style.scss';
 
 export default class CurrencyPrice extends React.Component {
+  supportedCurrencies;
   state = {
     foundCurrencies: {},
     selectedCurrencyRate: '',
@@ -26,12 +26,24 @@ export default class CurrencyPrice extends React.Component {
     rateLoading: false,
     rateHistoryLoading: false
   };
+  updateSupportedCurrencies = async () => {
+    try{
+      const data = await supportedCurrenciesApi();
+      this.supportedCurrencies = data.data;
+    } catch(e) {
+      console.log('supported currencies api error', e);
+    }
+  }
+  componentDidMount() {
+    this.updateSupportedCurrencies();
+  }
+
   currencyCodeFinder = (code) => {
     const upperCaseText = code.toUpperCase();
     // filter to find match currency codes
-    return Object.keys(supportedCurrencies)
+    return Object.keys(this.supportedCurrencies)
       .filter(item => {
-        return (upperCaseText !== '' && supportedCurrencies[item].currency.indexOf(upperCaseText) === 0);
+        return (upperCaseText !== '' && this.supportedCurrencies[item].currency.indexOf(upperCaseText) === 0);
       }).map(item => supportedCurrencies[item]);
   };
 
